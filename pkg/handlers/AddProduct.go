@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"strings"
+	
 	"lime-shop-backend/pkg/models"
 	"github.com/gin-gonic/gin"
 )
@@ -15,12 +15,6 @@ func (h handler) CreateProduct(c *gin.Context) {
 	}
 
 	if err := h.DB.Create(&product).Error; err != nil {
-		// Проверяем на ошибку дублирования
-		if strings.Contains(err.Error(), "duplicate key value") {
-			c.JSON(http.StatusConflict, gin.H{"error": "Товар с таким названием уже существует"})
-			return
-		}
-
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Не удалось создать товар"})
 		return
 	}

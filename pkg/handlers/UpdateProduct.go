@@ -11,18 +11,25 @@ func (h handler) UpdateProduct(c *gin.Context) {
     // Получаем ID продукта из URL параметров
     id := c.Param("id")
 
-    var product models.Product
-    if err := c.ShouldBindJSON(&product); err != nil {
+    // Проверяем, существует ли продукт с таким ID
+    var existingProduct models.Product
+    if err := h.DB.First(&existingProduct, id).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Товар не найден"})
+        return
+    }
+
+    var updates map[string]interface{}
+    if err := c.ShouldBindJSON(&updates); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Неверные данные"})
         return
     }
 
-    // Находим продукт по ID и обновляем его
-    if err := h.DB.Model(&models.Product{}).Where("id = ?", id).Updates(product).Error; err != nil {
+    // Обновляем только указанные поля
+    if err := h.DB.Model(&existingProduct).Updates(updates).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Не удалось обновить товар"})
         return
     }
 
     // Возвращаем обновленный продукт
-    c.JSON(http.StatusOK, product)
+    c.JSON(http.StatusOK, existingProduct)
 }

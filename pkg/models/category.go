@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Category struct {
 	gorm.Model
-	ID       uint      `json:"id" gorm:"primaryKey;autoIncrement"`
-	Name     string    `json:"name"`
+	ID       uint      `gorm:"id" gorm:"primaryKey;autoIncrement"`
+	Name     string    `gorm:"name"`
 	Products []Product `gorm:"foreignKey:CategoryID"`
 }
