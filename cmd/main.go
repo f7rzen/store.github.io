@@ -2,7 +2,7 @@ package main
 
 import (
 	"lime-shop-backend/pkg/db"
-	"lime-shop-backend/pkg/handlers"
+	"lime-shop-backend/pkg/handlers/admin"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -20,11 +20,13 @@ func main() {
     h := handlers.New(DB)
 
 	router := gin.Default()
-	router.GET("/products",h.GetAllProducts)
-	router.POST("/products",h.CreateProduct)
-
-	router.DELETE("/products/:id", h.DeleteProduct)
-    router.PUT("/products/:id", h.UpdateProduct)
+    admin := router.Group("/admin")
+    {
+        admin.GET("/products", h.GetAllProducts)
+        admin.POST("/products", h.CreateProduct)
+        admin.PUT("/products/:id", h.UpdateProduct)
+        admin.DELETE("/products/:id", h.DeleteProduct)
+    }
 
 	// Запуск сервера
 	router.Run(":8080")
