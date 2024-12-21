@@ -2,12 +2,13 @@ package db
 
 import (
 	"fmt"
-	"lime-shop-backend/pkg/models"
 	"log"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"store.github.io/pkg/models"
 )
 
 func Init() *gorm.DB {

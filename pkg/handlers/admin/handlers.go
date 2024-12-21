@@ -5,9 +5,9 @@ import (
 )
 
 type handler struct {
-    DB *gorm.DB
+	DB *gorm.DB
 }
 
 func New(db *gorm.DB) handler {
-    return handler{db}
+	return handler{db}
 }

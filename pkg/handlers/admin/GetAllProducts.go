@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"lime-shop-backend/pkg/models"
 	"github.com/gin-gonic/gin"
+	"store.github.io/pkg/models"
 )
 
 func (h handler) GetAllProducts(c *gin.Context) {
