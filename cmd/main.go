@@ -7,27 +7,38 @@ import (
 	"github.com/joho/godotenv"
 
 	"store.github.io/pkg/db"
-	handlers "store.github.io/pkg/handlers/admin"
+	"store.github.io/pkg/handlers/admin"
+	"store.github.io/pkg/handlers/auth"
+	"store.github.io/pkg/middleware"
 )
 
-func main() {
+func init() {
 	// Загрузка переменных окружения
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Ошибка загрузки .env файла")
 	}
+	db.ConnectToDb()
+	db.MigrationDatabase()
+}
 
-	DB := db.Init()
-	h := handlers.New(DB)
-
+func main() {
 	router := gin.Default()
-	admin := router.Group("/admin")
+
+	// Маршруты для авторизации
+	router.POST("/signup", auth.Signup)
+	router.POST("/login", auth.Login)
+
+	// Группа маршрутов для админки
+	dashboard := router.Group("/admin")
+	dashboard.Use(middleware.AuthMiddleware) // Применяем middleware
 	{
-		admin.GET("/products", h.GetAllProducts)
-		admin.POST("/products", h.CreateProduct)
-		admin.PUT("/products/:id", h.UpdateProduct)
-		admin.DELETE("/products/:id", h.DeleteProduct)
+		dashboard.GET("/products", admin.GetAllProducts)
+		dashboard.POST("/products", admin.CreateProduct)
+		dashboard.PUT("/products/:id", admin.UpdateProduct)
+		dashboard.DELETE("/products/:id", admin.DeleteProduct)
 	}
+
 	// Запуск сервера
 	router.Run(":8080")
 }
