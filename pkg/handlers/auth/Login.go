@@ -38,7 +38,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Создаём токен
-	expirationTime := time.Now().Add(24 * time.Hour)
+	expirationTime := time.Now().Add(30 * time.Second)
 	claims := &models.Claims{
 		UserID: user.ID,
 		Email:  user.Email,
@@ -57,7 +57,7 @@ func Login(c *gin.Context) {
 
 	// Возвращаем токен клиенту
 	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
+		"token":   tokenString,
 		"message": "Login successful. You can now access the admin dashboard.",
 	})
 }
