@@ -5,7 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
+	_ "store.github.io/docs"
 	"store.github.io/pkg/db"
 	"store.github.io/pkg/handlers/admin"
 	"store.github.io/pkg/handlers/auth"
@@ -22,10 +25,11 @@ func init() {
 	db.MigrationDatabase()
 }
 
+// @title     Gingo Bookstore API
 func main() {
+
 	router := gin.Default()
 
-	// Маршруты для авторизации
 	router.POST("/signup", auth.Signup)
 	router.POST("/login", auth.Login)
 
@@ -37,7 +41,10 @@ func main() {
 		dashboard.POST("/products", admin.CreateProduct)
 		dashboard.PUT("/products/:id", admin.UpdateProduct)
 		dashboard.DELETE("/products/:id", admin.DeleteProduct)
+		dashboard.POST("/upload", admin.UploadAndSaveExcel)
 	}
+
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Запуск сервера
 	router.Run(":8080")

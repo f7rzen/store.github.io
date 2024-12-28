@@ -1,0 +1,127 @@
+swagger: "2.0"
+info:
+  title: Store API
+  description: REST API for managing a store
+  version: 1.0.0
+host: localhost:8080
+basePath: /
+schemes:
+  - http
+  
+paths:
+  /signup:
+    post:
+      summary: Register a new user
+      parameters:
+        - in: body
+          name: body
+          description: User to be registered
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Invalid input
+
+  /login:
+    post:
+      summary: Authenticate user
+      parameters:
+        - in: body
+          name: body
+          description: Login details
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Login successful
+        401:
+          description: Unauthorized
+
+  /admin/products:
+    get:
+      summary: Get all products
+      responses:
+        200:
+          description: List of products
+        500:
+          description: Server error
+    post:
+      summary: Create a new product
+      parameters:
+        - in: body
+          name: body
+          description: Product details
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        201:
+          description: Product created
+        400:
+          description: Bad request
+
+  /admin/products/{id}:
+    put:
+      summary: Update a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Product update details
+          required: true
+          schema:
+            $ref: '#/definitions/ProductUpdate'
+      responses:
+        200:
+          description: Product updated
+        404:
+          description: Product not found
+    delete:
+      summary: Delete a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Product deleted
+        404:
+          description: Product not found
+
+definitions:
+  Product:
+    type: object
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      category:
+        type: string
+  ProductUpdate:
+    type: object
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      category:
+        type: string

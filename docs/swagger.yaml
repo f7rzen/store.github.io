@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Store API
+  description: REST API for managing a store
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /signup:
+    post:
+      summary: Регистрация нового пользователя
+      description: Создает новую учетную запись пользователя.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+      responses:
+        "200":
+          description: Успешная регистрация
+        "400":
+          description: Ошибка валидации или создания пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to create user"
+
+  /login:
+    post:
+      summary: Аутентификация пользователя
+      description: Авторизация пользователя с выдачей JWT токена.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  message:
+                    type: string
+                    example: "Login successful. You can now access the admin dashboard."
+        "400":
+          description: Неверный формат данных
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid JSON"
+        "401":
+          description: Неверные email или пароль
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid email or password"
