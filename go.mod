@@ -8,6 +8,7 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.4
+	github.com/xuri/excelize/v2 v2.9.0
 	gorm.io/driver/postgres v1.5.11
 )
 
@@ -30,7 +31,6 @@ require (
 	github.com/richardlehane/msoleps v1.0.4 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/xuri/efp v0.0.0-20240408161823-9ad904a10d6d // indirect
-	github.com/xuri/excelize/v2 v2.9.0 // indirect
 	github.com/xuri/nfp v0.0.0-20240318013403-ab9948c2c4a7 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect

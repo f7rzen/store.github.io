@@ -11,6 +11,26 @@ import (
 	"store.github.io/pkg/models"
 )
 
+type UploadResponse struct {
+	Message string `json:"message"`
+}
+
+type UploadError struct {
+	Error string `json:"error"`
+}
+
+// UploadAndSaveExcel загружает Excel файл и сохраняет данные в базу
+// @Summary Загрузить Excel файл и сохранить товары
+// @Description Принимает Excel файл с товарами, парсит его содержимое и сохраняет продукты в базу данных
+// @Tags admin
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Excel файл с данными о товарах"
+// @Success 200 {object} UploadResponse "Товары успешно добавлены в базу данных"
+// @Failure 400 {object} UploadError "Не удалось получить файл"
+// @Failure 500 {object} UploadError "Ошибка обработки или сохранения данных"
+// @Security BearerAuth
+// @Router /admin/upload [post]
 func UploadAndSaveExcel(c *gin.Context) {
 	// Получаем файл из запроса
 	file, err := c.FormFile("file")
@@ -27,7 +47,7 @@ func UploadAndSaveExcel(c *gin.Context) {
 	}
 	defer f.Close()
 
-	// Парсим файл с помощью excelize
+	// Парсим файл
 	excel, err := excelize.OpenReader(f)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Не удалось прочитать Excel файл"})

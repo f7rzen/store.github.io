@@ -8,12 +8,20 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "store.github.io/docs"
+	"store.github.io/docs"
 	"store.github.io/pkg/db"
 	"store.github.io/pkg/handlers/admin"
 	"store.github.io/pkg/handlers/auth"
 	"store.github.io/pkg/middleware"
 )
+
+// @title Store Admin API
+// @description API server for Admin Panel
+// @host localhost:8080
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description <b>Enter the token with the: `Bearer ` prefix, e.g. "Bearer eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVJ9..."</b>
 
 func init() {
 	// Загрузка переменных окружения
@@ -25,14 +33,14 @@ func init() {
 	db.MigrationDatabase()
 }
 
-// @title     Gingo Bookstore API
 func main() {
+	docs.SwaggerInfo.BasePath = ""
 
 	router := gin.Default()
 
 	router.POST("/signup", auth.Signup)
 	router.POST("/login", auth.Login)
-
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Группа маршрутов для админки
 	dashboard := router.Group("/admin")
 	dashboard.Use(middleware.AuthMiddleware) // Применяем middleware
@@ -44,8 +52,9 @@ func main() {
 		dashboard.POST("/upload", admin.UploadAndSaveExcel)
 	}
 
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	// Запуск сервера
-	router.Run(":8080")
+	err := router.Run(":8080")
+	if err != nil {
+		return
+	}
 }
