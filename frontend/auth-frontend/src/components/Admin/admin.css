@@ -1,0 +1,134 @@
+.header {
+    background-color: #489cff; /* Синий цвет */
+    color: white; /* Белый текст */
+    padding: 15px 20px; /* Отступы */
+    display: flex; /* Используем flexbox */
+    align-items: center; /* Выравнивание по вертикали */
+    justify-content: flex-start; /* Выравнивание текста слева */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+}
+
+.header h1 {
+    margin: 0; /* Убираем отступы */
+    font-size: 24px; /* Размер шрифта */
+    font-weight: bold; /* Жирный шрифт */
+    color: #ffffff;
+}
+
+.admin-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-right: auto;
+    margin-left: auto; /* Отступ сверху от кнопки */
+    margin-top: 40px; /* Отступ сверху от кнопки */
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/*thead {*/
+/*    background-color: rgb(255, 255, 255);*/
+/*    color: #000000;*/
+/*}*/
+
+thead th {
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #ccc;
+}
+
+tbody td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+    vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #dfe6f0;
+}
+
+th, td {
+    text-align: center;
+}
+
+.image-column img {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+    margin: 0 auto;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    font-size: 18px;
+}
+
+.import-button {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 70px; /* Расстояние от верхнего края */
+    right: 20px; /* Расстояние от правого края */
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #489cff;
+    background-color: #f9f9f9; /* Белый фон */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.import-button:hover {
+    background-color: #dbedff;
+    transform: translateY(-2px);
+}
+
+.delete-button {
+    color: red;
+    border-color: red;
+}
+
+.delete-button:hover {
+    background-color: #ffb5b5;
+}
+
+input[type="checkbox"] {
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+    margin-left:10px ;
+    cursor: pointer; /* Удобный курсор для пользователя */
+    width: 20px; /* Ширина квадрата */
+    height: 20px; /* Высота квадрата */
+}
+
+.edit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}

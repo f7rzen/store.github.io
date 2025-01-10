@@ -1,0 +1,378 @@
+definitions:
+  admin.CreateError:
+    properties:
+      error:
+        type: string
+    type: object
+  admin.CreateRequest:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        minimum: 0
+        type: number
+    required:
+    - name
+    type: object
+  admin.DeleteError:
+    properties:
+      error:
+        type: string
+    type: object
+  admin.GetError:
+    properties:
+      error:
+        type: string
+    type: object
+  admin.GetResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/admin.ProductResponse'
+        type: array
+    type: object
+  admin.ProductResponse:
+    properties:
+      Created_at:
+        type: string
+      DeletedAt:
+        type: string
+      ID:
+        type: integer
+      Updated_at:
+        type: string
+      category_id:
+        type: integer
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  admin.UpdateError:
+    properties:
+      error:
+        type: string
+    type: object
+  admin.UploadError:
+    properties:
+      error:
+        type: string
+    type: object
+  admin.UploadResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  auth.LoginErrorResponse:
+    properties:
+      error:
+        example: Invalid email or password
+        type: string
+    type: object
+  auth.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  auth.LoginResponse:
+    properties:
+      access_token:
+        example: <JWT_ACCESS_TOKEN>
+        type: string
+    type: object
+  auth.RefreshError:
+    properties:
+      error:
+        type: string
+    type: object
+  auth.RefreshResponse:
+    properties:
+      accessToken:
+        example: <JWT_ACCESS_TOKEN>
+        type: string
+    type: object
+  auth.SignupErrorResponse:
+    properties:
+      error:
+        example: Invalid JSON
+        type: string
+    type: object
+  auth.SignupRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  auth.SignupResponse:
+    properties:
+      message:
+        example: User registered successfully
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API server for Admin Panel
+  title: Store Admin API
+paths:
+  /admin/products:
+    get:
+      description: Возвращает список всех товаров из базы данных
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список продуктов
+          schema:
+            $ref: '#/definitions/admin.GetResponse'
+        "500":
+          description: Не удалось получить товары
+          schema:
+            $ref: '#/definitions/admin.GetError'
+      security:
+      - BearerAuth: []
+      summary: Получить все товары
+      tags:
+      - admin
+    post:
+      consumes:
+      - application/json
+      description: Добавить новый товар в базу данных
+      parameters:
+      - description: Параметры нового товара
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/admin.CreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/admin.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/admin.CreateError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/admin.CreateError'
+      security:
+      - BearerAuth: []
+      summary: Создание товара
+      tags:
+      - admin
+  /admin/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить товар из базы данных по ID
+      parameters:
+      - description: ID товара
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Товар успешно удален
+          schema:
+            $ref: '#/definitions/admin.DeleteError'
+        "404":
+          description: Товар не найден
+          schema:
+            $ref: '#/definitions/admin.DeleteError'
+        "500":
+          description: Не удалось удалить товар
+          schema:
+            $ref: '#/definitions/admin.DeleteError'
+      security:
+      - BearerAuth: []
+      summary: Удаление товара
+      tags:
+      - admin
+    put:
+      description: Обновляет информацию о товаре по ID
+      parameters:
+      - description: ID товара
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновляемые данные товара
+        in: body
+        name: product
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Обновленный товар
+          schema:
+            $ref: '#/definitions/admin.ProductResponse'
+        "400":
+          description: Неверные данные
+          schema:
+            $ref: '#/definitions/admin.UpdateError'
+        "404":
+          description: Товар не найден
+          schema:
+            $ref: '#/definitions/admin.UpdateError'
+        "500":
+          description: Не удалось обновить товар
+          schema:
+            $ref: '#/definitions/admin.UpdateError'
+      security:
+      - BearerAuth: []
+      summary: Обновить товар
+      tags:
+      - admin
+  /admin/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Принимает Excel файл с товарами, парсит его содержимое и сохраняет
+        продукты в базу данных
+      parameters:
+      - description: Excel файл с данными о товарах
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Товары успешно добавлены в базу данных
+          schema:
+            $ref: '#/definitions/admin.UploadResponse'
+        "400":
+          description: Не удалось получить файл
+          schema:
+            $ref: '#/definitions/admin.UploadError'
+        "500":
+          description: Ошибка обработки или сохранения данных
+          schema:
+            $ref: '#/definitions/admin.UploadError'
+      security:
+      - BearerAuth: []
+      summary: Загрузить Excel файл и сохранить товары
+      tags:
+      - admin
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Авторизует пользователя, возвращая JWT-токен
+      parameters:
+      - description: Параметры авторизации
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.LoginErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.LoginErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.LoginErrorResponse'
+      summary: Авторизация пользователя
+      tags:
+      - auth
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: Обновляет access токен с использованием refresh токена, сохраненного
+        в куки.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.RefreshResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/auth.RefreshError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/auth.RefreshError'
+      summary: Обновление access токена
+      tags:
+      - auth
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Регистрирует нового пользователя в системе
+      parameters:
+      - description: Параметры регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignupResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/auth.SignupErrorResponse'
+      summary: Регистрация пользователя
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    description: '<b>Enter the token with the: `Bearer ` prefix, e.g. "Bearer eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVJ9..."</b>'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
